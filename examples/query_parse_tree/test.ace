@@ -1,0 +1,8 @@
+cpu {
+	name = Nx45v;    
+	vlen = 512;
+};
+
+config {
+	timeout_cycle = 1;
+};
