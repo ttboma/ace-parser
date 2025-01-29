@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::Read;
 
-use ace_parser::*;
+use ace_parser::grammar::*;
 
 fn main() {
     let mut file = File::open("examples/query_parse_tree/test.ace")
@@ -12,47 +12,49 @@ fn main() {
     let parse_tree = ace(&contents);
     println!("{:#?}", parse_tree);
 
-    // First character of the file 
+    // First character of the file
     let line = 0;
     let character = 0;
-    let non_terminal = parse_tree.query(Position::new(line, character)).unwrap();
-    println!(
-        "query line: {line} character: {character}\n{:#?}",
-        non_terminal
-    );
+    let query = parse_tree.query(line, character);
+    println!("query line: {line} character: {character}\n{:#?}", query);
+    println!("show_completions: {:?}", query.show_completions());
 
     let line = 1;
     let character = 14;
-    let non_terminal = parse_tree.query(Position::new(line, character)).unwrap();
-    println!(
-        "query line: {line} character: {character}\n{:#?}",
-        non_terminal
-    );
+    let query = parse_tree.query(line, character);
+    println!("query line: {line} character: {character}\n{:#?}", query);
+    println!("show_completions: {:?}", query.show_completions());
 
     let line = 4;
     let character = 0;
-    let non_terminal = parse_tree.query(Position::new(line, character)).unwrap();
-    println!(
-        "query line: {line} character: {character}\n{:#?}",
-        non_terminal
-    );
+    let query = parse_tree.query(line, character);
+    println!("query line: {line} character: {character}\n{:#?}", query);
+    println!("show_completions: {:?}", query.show_completions());
 
-    // The position is not in the parse tree (there is one character '\n' in line 4), 
-    // Still get the result of the last non_terminal
+    // The position is not in the parse tree (there is one character '\n' in line 4),
+    // Still get the result of the last query
     let line = 4;
     let character = 2;
-    let non_terminal = parse_tree.query(Position::new(line, character));
-    println!(
-        "query line: {line} character: {character}\n{:#?}",
-        non_terminal
-    );
+    let query = parse_tree.query(line, character);
+    println!("query line: {line} character: {character}\n{:#?}", query);
+    println!("show_completions: {:?}", query.show_completions());
 
     // Error: End of the file
     let line = 7;
     let character = 2;
-    let non_terminal = parse_tree.query(Position::new(line, character));
-    println!(
-        "query line: {line} character: {character}\n{:#?}",
-        non_terminal
-    );
+    let query = parse_tree.query(line, character);
+    println!("query line: {line} character: {character}\n{:#?}", query);
+    println!("show_completions: {:?}", query.show_completions());
+
+    let cpu_attributes = match &parse_tree.statements()[0] {
+        Statement::Cpu(cpu) => {
+            cpu.attributes()
+        },
+        _ => panic!("Not a CPU statement"),
+    };
+    let name = match &cpu_attributes[0] {
+        statement::CpuAttribute::Name(name) => name.identifier().token().fragment(),
+        _ => panic!("Not a Name attribute"),
+    };
+    println!("cpu name: {:#?}", name);
 }

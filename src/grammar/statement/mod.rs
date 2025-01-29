@@ -1,23 +1,30 @@
 use super::*;
 
-#[derive(Debug)]
+#[derive(Debug, Getters)]
 pub struct Cpu<'a> {
     range: Range,
-    pub pragma: token::Cpu<'a>,
-    pub left_brace: token::LeftBrace<'a>,
-    pub attributes: Vec<CpuAttribute<'a>>,
-    pub right_brace: token::RightBrace<'a>,
-    pub semicolon: token::Semicolon<'a>,
+    #[getset(get = "pub")]
+    pragma: token::Cpu<'a>,
+    #[getset(get = "pub")]
+    left_brace: token::LeftBrace<'a>,
+    #[getset(get = "pub")]
+    attributes: Vec<CpuAttribute<'a>>,
+    #[getset(get = "pub")]
+    right_brace: token::RightBrace<'a>,
+    #[getset(get = "pub")]
+    semicolon: token::Semicolon<'a>,
 }
 
 pub fn cpu<'a>(
     input: LocatedSpan<&'a str>,
 ) -> IResult<LocatedSpan<&'a str>, Cpu<'a>, ErrorTree<LocatedSpan<&'a str>>> {
-    let (s, pragma) = token::cpu(input)?;
-    let (s, left_brace) = token::left_brace(s)?;
+    let (s, pragma) = token::cpu().parse(input)?;
+    let (s, left_brace) = token::left_brace().parse(s)?;
     let (s, attributes) = many0(cpu_attribute)(s)?;
-    let (s, right_brace) = token::right_brace(s)?;
-    let (s, semicolon) = token::semicolon(s)?;
+    let (s, right_brace) = token::right_brace().parse(s)?;
+    let (s, semicolon) = token::semicolon()
+        .set_label_completion(marker::LabelCompletion::Statement)
+        .parse(s)?;
     let range = Range {
         start: input.into(),
         end: s.into(),
@@ -94,24 +101,31 @@ impl AceParseTree for CpuAttribute<'_> {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Getters)]
 pub struct Config<'a> {
     range: Range,
-    pub pragma: token::Config<'a>,
-    pub left_brace: token::LeftBrace<'a>,
-    pub attributes: Vec<ConfigAttribute<'a>>,
-    pub right_brace: token::RightBrace<'a>,
-    pub semicolon: token::Semicolon<'a>,
+    #[getset(get = "pub")]
+    pragma: token::Config<'a>,
+    #[getset(get = "pub")]
+    left_brace: token::LeftBrace<'a>,
+    #[getset(get = "pub")]
+    attributes: Vec<ConfigAttribute<'a>>,
+    #[getset(get = "pub")]
+    right_brace: token::RightBrace<'a>,
+    #[getset(get = "pub")]
+    semicolon: token::Semicolon<'a>,
 }
 
 pub fn config<'a>(
     input: LocatedSpan<&'a str>,
 ) -> IResult<LocatedSpan<&'a str>, Config<'a>, ErrorTree<LocatedSpan<&'a str>>> {
-    let (s, pragma) = token::config(input)?;
-    let (s, left_brace) = token::left_brace(s)?;
+    let (s, pragma) = token::config().parse(input)?;
+    let (s, left_brace) = token::left_brace().parse(s)?;
     let (s, attributes) = many0(config_attribute)(s)?;
-    let (s, right_brace) = token::right_brace(s)?;
-    let (s, semicolon) = token::semicolon(s)?;
+    let (s, right_brace) = token::right_brace().parse(s)?;
+    let (s, semicolon) = token::semicolon()
+        .set_label_completion(marker::LabelCompletion::Statement)
+        .parse(s)?;
     let range = Range {
         start: input.into(),
         end: s.into(),

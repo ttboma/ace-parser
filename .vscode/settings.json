@@ -1,7 +1,11 @@
 {
     "cSpell.words": [
+        "FELEN",
+        "getset",
+        "hexdigit",
         "miette",
         "multispace",
+        "SPINALHDL",
         "thiserror"
     ]
 }
