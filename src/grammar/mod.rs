@@ -50,11 +50,14 @@ pub struct Query<'b> {
 }
 
 impl<'b> Query<'b> {
-    pub fn show_completions(&self) -> Result<Vec<&'static str>, &'static str> {
+    pub fn show_completions(&self) -> Vec<&'static str> {
         self.query_result
             .as_ref()
             .map(|t| t.show_completions())
-            .map_err(|_| "Query failed.")
+            .unwrap_or_else(|_| {
+                let m = marker::LabelCompletion::Statement;
+                m.completion()
+            }) // Err case means eof. So, show completion for statements.
     }
 }
 
@@ -102,13 +105,13 @@ impl Range {
     }
 }
 
- trait ParseTree: std::fmt::Debug {
-     fn range(&self) -> Range;
-     fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()>;
-     fn show_completions(&self) -> Vec<&'static str> {
-         vec![]
-     }
- }
+trait ParseTree: std::fmt::Debug {
+    fn range(&self) -> Range;
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()>;
+    fn show_completions(&self) -> Vec<&'static str> {
+        vec![]
+    }
+}
 
 #[derive(Debug)]
 pub enum Statement<'a> {

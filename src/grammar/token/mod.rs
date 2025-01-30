@@ -1,13 +1,13 @@
 use super::*;
 use paste::paste;
 
-/// Parses spacing, which consists of either the end of the input (`eof`)
+/// Parses spacing, which consists of either the end of the input ([`eof`])
 /// or a sequence of comments and whitespace characters ([`comment`] or [`multispace1`]).
 ///
 /// ## Grammar
 ///
-/// - [`spacing`] <- eof / ([`comment`] / [`multispace1`])*
-/// - `eof`       <- !.
+/// - [`spacing`] <- [`eof`] / ([`comment`] / [`multispace1`])*
+/// - [`eof`]       <- !.
 pub fn spacing(
     input: LocatedSpan<&str>,
 ) -> IResult<LocatedSpan<&str>, Vec<LocatedSpan<&str>>, ErrorTree<LocatedSpan<&str>>> {
@@ -52,7 +52,7 @@ macro_rules! define_lexical_terminal {
     ($struct_name:ident, $token:expr, $parser:expr, $test_input:literal) => {
         paste! {
             #[doc = concat!(
-                " This function returns a [`", stringify!($struct_name), "`], which is a type of [`", stringify!([<$struct_name Parser>]), "`].\n\n",
+                " This function returns a [`", stringify!($struct_name), "`], which is a type of [`Parser`] trait.\n\n",
                 " The [`", stringify!([<$struct_name Parser>]), "`] is initialized without any label completion.\n\n",
                 " ## Grammar\n\n",
                 " It's based on the following PEG grammar rule of the **ACE** grammar:\n\n",
