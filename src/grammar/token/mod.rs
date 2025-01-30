@@ -1,11 +1,11 @@
 use super::*;
 use paste::paste;
 
-/// Parses spacing, which consists of either the end of the input (`eof`) 
+/// Parses spacing, which consists of either the end of the input (`eof`)
 /// or a sequence of comments and whitespace characters ([`comment`] or [`multispace1`]).
 ///
 /// ## Grammar
-/// 
+///
 /// - [`spacing`] <- eof / ([`comment`] / [`multispace1`])*
 /// - `eof`       <- !.
 pub fn spacing(
@@ -19,7 +19,7 @@ pub fn spacing(
 /// Parses a comment, which starts with `//` and continues until the end of the line.
 ///
 /// ## Grammar
-/// 
+///
 /// - [`comment`] <- '//' (! [`end_of_line`] .)* [`end_of_line`]?
 pub fn comment(
     input: LocatedSpan<&str>,
@@ -34,7 +34,7 @@ pub fn comment(
 /// Parses an end-of-line (EOL) sequence, which can be any of `\r\n`, `\n`, or `\r`.
 ///
 /// ## Grammar
-/// 
+///
 /// - [`end_of_line`]` <- '\r\n' / '\n' / '\r'
 pub fn end_of_line(
     input: LocatedSpan<&str>,
@@ -42,6 +42,12 @@ pub fn end_of_line(
     alt((tag("\r\n"), tag("\r"), tag("\n")))(input)
 }
 
+/// This macro generates a Rust parser for recognizing a 
+/// specific lexical token in a parsing context. It creates a function to instantiate 
+/// the parser, a parser struct with an optional label completion feature, and a struct 
+/// representing the parsed token. The parser follows a specified PEG grammar rule and 
+/// includes spacing handling. The generated parser implements parsing logic, autocompletion, 
+/// and position querying for parsed tokens.
 macro_rules! define_lexical_terminal {
     ($struct_name:ident, $token:expr, $parser:expr, $test_input:literal) => {
         paste! {
