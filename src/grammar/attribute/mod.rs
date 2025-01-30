@@ -38,12 +38,12 @@ pub fn name<'a>(
     ))
 }
 
-impl AceParseTree for Name<'_> {
+impl ParseTree for Name<'_> {
     fn range(&self) -> Range {
         self.range
     }
 
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         if self.range().start <= pos && pos < self.range().end {
             self.pragma
                 .query(pos)
@@ -94,12 +94,12 @@ pub fn vlen<'a>(
     ))
 }
 
-impl AceParseTree for Vlen<'_> {
+impl ParseTree for Vlen<'_> {
     fn range(&self) -> Range {
         self.range
     }
 
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         if self.range().contains(pos) {
             self.pragma
                 .query(pos)
@@ -127,7 +127,7 @@ fn number<'a>(
     ))(input)
 }
 
-impl AceParseTree for Number<'_> {
+impl ParseTree for Number<'_> {
     fn range(&self) -> Range {
         match self {
             Number::HexNumber(hex_number) => hex_number.range(),
@@ -135,7 +135,7 @@ impl AceParseTree for Number<'_> {
         }
     }
 
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         match self {
             Number::HexNumber(hex_number) => hex_number.query(pos),
             Number::DecNumber(dec_number) => dec_number.query(pos),
@@ -181,12 +181,12 @@ pub fn timeout_cycle<'a>(
     ))
 }
 
-impl AceParseTree for TimeoutCycle<'_> {
+impl ParseTree for TimeoutCycle<'_> {
     fn range(&self) -> Range {
         self.range
     }
 
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         if self.range().contains(pos) {
             self.pragma
                 .query(pos)

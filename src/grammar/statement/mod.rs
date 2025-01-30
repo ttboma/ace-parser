@@ -42,12 +42,12 @@ pub fn cpu<'a>(
     ))
 }
 
-impl AceParseTree for Cpu<'_> {
+impl ParseTree for Cpu<'_> {
     fn range(&self) -> Range {
         self.range
     }
 
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         if self.pragma.range().contains(pos) {
             self.pragma.query(pos)
         } else if self.left_brace.range().contains(pos) {
@@ -86,14 +86,14 @@ fn cpu_attribute<'a>(
     ))(input)
 }
 
-impl AceParseTree for CpuAttribute<'_> {
+impl ParseTree for CpuAttribute<'_> {
     fn range(&self) -> Range {
         match self {
             CpuAttribute::Name(name) => name.range(),
             CpuAttribute::Vlen(vlen) => vlen.range(),
         }
     }
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         match self {
             CpuAttribute::Name(name) => name.query(pos),
             CpuAttribute::Vlen(vlen) => vlen.query(pos),
@@ -143,12 +143,12 @@ pub fn config<'a>(
     ))
 }
 
-impl AceParseTree for Config<'_> {
+impl ParseTree for Config<'_> {
     fn range(&self) -> Range {
         self.range
     }
 
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         if self.pragma.range().contains(pos) {
             self.pragma.query(pos)
         } else if self.left_brace.range().contains(pos) {
@@ -185,14 +185,14 @@ fn config_attribute<'a>(
         .parse(input)
 }
 
-impl AceParseTree for ConfigAttribute<'_> {
+impl ParseTree for ConfigAttribute<'_> {
     fn range(&self) -> Range {
         match self {
             ConfigAttribute::TimeoutCycle(timeout_cycle) => timeout_cycle.range(),
         }
     }
 
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         match self {
             ConfigAttribute::TimeoutCycle(timeout_cycle) => timeout_cycle.query(pos),
         }

@@ -46,7 +46,7 @@ impl<'a> Ace<'a> {
 
 #[derive(Debug)]
 pub struct Query<'b> {
-    query_result: Result<&'b dyn AceParseTree, ()>,
+    query_result: Result<&'b dyn ParseTree, ()>,
 }
 
 impl<'b> Query<'b> {
@@ -102,13 +102,13 @@ impl Range {
     }
 }
 
-trait AceParseTree: std::fmt::Debug {
-    fn range(&self) -> Range;
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()>;
-    fn show_completions(&self) -> Vec<&'static str> {
-        vec![]
-    }
-}
+ trait ParseTree: std::fmt::Debug {
+     fn range(&self) -> Range;
+     fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()>;
+     fn show_completions(&self) -> Vec<&'static str> {
+         vec![]
+     }
+ }
 
 #[derive(Debug)]
 pub enum Statement<'a> {
@@ -125,14 +125,14 @@ fn statement<'a>(
     ))(input)
 }
 
-impl AceParseTree for Statement<'_> {
+impl ParseTree for Statement<'_> {
     fn range(&self) -> Range {
         match self {
             Statement::Cpu(cpu) => cpu.range(),
             Statement::Config(config) => config.range(),
         }
     }
-    fn query(&self, pos: Position) -> Result<&dyn AceParseTree, ()> {
+    fn query(&self, pos: Position) -> Result<&dyn ParseTree, ()> {
         match self {
             Statement::Cpu(cpu) => cpu.query(pos),
             Statement::Config(config) => config.query(pos),

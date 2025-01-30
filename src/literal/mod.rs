@@ -9,8 +9,5 @@ pub mod statement;
 /// List of all **ACE** attribute pragmas
 pub mod attribute;
 
-/// List of all keywords that is use in an **ACE** attribute.
-pub mod expression;
-
-/// List of symbols
-pub mod symbol;
+/// List of literal values 
+pub mod token;
