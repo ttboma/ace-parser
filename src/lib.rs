@@ -7,3 +7,4 @@
 pub mod grammar;
 pub mod literal;
 pub mod marker;
+pub mod snippet;

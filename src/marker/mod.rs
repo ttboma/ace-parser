@@ -24,12 +24,10 @@ impl LabelCompletion {
 
     fn complete_statement(&self) -> Vec<&'static str> {
         vec![
-            literal::statement::CPU,
-            literal::statement::CONFIG,
-            literal::statement::ACR_ALIAS[0],
-            literal::statement::ACR_ALIAS[1],
-            literal::statement::ACM_ALIAS[0],
-            literal::statement::ACM_ALIAS[1],
+            snippet::statement::CPU,
+            snippet::statement::CONFIG,
+            snippet::statement::ACR,
+            snippet::statement::ACM,
             literal::statement::ACP,
             literal::statement::CSIM,
             literal::statement::CSIM_HEADER,

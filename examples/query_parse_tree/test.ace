@@ -6,4 +6,3 @@ cpu {
 config {
 	timeout_cycle = 1;
 };
-
